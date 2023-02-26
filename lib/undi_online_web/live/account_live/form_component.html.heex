@@ -1,0 +1,14 @@
+<div>
+  <.form
+    :let={f}
+    for={@changeset}
+    id="account-form"
+    phx-target={@myself}
+    phx-submit="save">
+
+    <div class="flex items-top">
+      <.input field={{f, :name}} type="text" phx-hook="Focus" placeholder="Add name of the team" />
+      <.button phx-disable-with="Saving..." class="ml-2 btn btn-primary">Save</.button>
+    </div>
+  </.form>
+</div>

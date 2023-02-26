@@ -1,0 +1,78 @@
+<div class="mb-8 prose">
+  <h1>Accounts</h1>
+</div>
+
+<div class="mb-8 border card">
+  <table class="table w-full">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Role</th>
+        <th>Members</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="memberships">
+      <%= for %{account: %{} = account} = invitation <- @invitations do %>
+        <tr id={"invitation-#{invitation.id}"}>
+          <td>
+            <div class="badge badge-info">New Invitation</div>
+            <%= account.name %>
+          </td>
+          <td></td>
+          <td></td>
+          <td>
+            <div class="flex justify-end text-sm gap-2">
+              <.link phx-click={JS.push("accept-invitation", value: %{id: invitation.id})}>
+                Accept
+              </.link>
+              <.link phx-click={JS.push("decline-invitation", value: %{id: invitation.id})} data-confirm="Are you sure?">
+                Accept
+              </.link>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      <%= for %{account: %{} = account} = membership <- @memberships do %>
+        <tr id={"membership-#{membership.id}"}>
+          <td>
+            <%= account.name %>
+            <%= if account.personal do %>
+              <div class="badge badge-outline">Personal</div>
+            <% end %>
+          </td>
+          <td>
+            <div class="badge badge-success">
+              <%= String.capitalize("#{membership.role}") %>
+            </div>
+          </td>
+          <td><%= Map.get(@member_counts, account.id) %></td>
+          <td>
+            <div class="flex justify-end text-sm gap-2">
+              <%= if !account.personal do %>
+                <.link navigate={~p"/accounts/#{account}/members"}>Members</.link>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="card-body">
+    <%= if @display_form? do %>
+      <.live_component
+        module={UndiOnlineWeb.AccountLive.FormComponent}
+        id={:new}
+        current_user={@current_user}
+        return_to={~p"/accounts"}
+      />
+    <% else %>
+      <div>
+        <button phx-click="display-form" class="btn btn-primary">
+          Add a new account
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
